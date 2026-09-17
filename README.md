@@ -45,6 +45,8 @@ This project was developed and tested in a Windows environment, but the Go appli
 go version
 ```
 
+Go should print the installed version, for example `go version go1.22.x windows/amd64`.
+
 ### Install Go on Linux
 
 Download the Linux archive from the official Go website, extract it to `/usr/local`, and add Go to your `PATH`:
@@ -60,7 +62,14 @@ go version
 
 Replace the archive name with the current version for your Linux architecture. Some distributions also provide Go through their package manager, but the official download is recommended when you need a specific Go version.
 
-Go should print the installed version, for example `go version go1.22.x windows/amd64`.
+### Verify Go
+
+On Windows PowerShell:
+
+```powershell
+go version
+```
+
 On Linux or macOS, run the same command from a terminal. Use Go 1.22 or newer.
 
 ## Install and setup
