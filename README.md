@@ -1,4 +1,4 @@
-# CloudNS Socket Gateway
+# ClouDNS Socket Gateway
 
 A small Go service that listens on a TCP socket, accepts a domain name, resolves the correct provider by TLD, checks availability via the provider API, and returns a normalized status string.
 
@@ -45,8 +45,6 @@ This project was developed and tested in a Windows environment, but the Go appli
 go version
 ```
 
-Go should print the installed version, for example `go version go1.22.x windows/amd64`.
-
 ### Install Go on Linux
 
 Download the Linux archive from the official Go website, extract it to `/usr/local`, and add Go to your `PATH`:
@@ -62,14 +60,7 @@ go version
 
 Replace the archive name with the current version for your Linux architecture. Some distributions also provide Go through their package manager, but the official download is recommended when you need a specific Go version.
 
-### Verify Go
-
-On Windows PowerShell:
-
-```powershell
-go version
-```
-
+Go should print the installed version, for example `go version go1.22.x windows/amd64`.
 On Linux or macOS, run the same command from a terminal. Use Go 1.22 or newer.
 
 ## Install and setup
@@ -87,7 +78,7 @@ Then update the config files before running anything:
 
 Important:
 
-- never commit real CloudNS credentials
+- never commit real ClouDNS credentials
 - use placeholders or secret storage in your own environment
 - keep `allowed_ips` restricted to trusted source addresses only
 
@@ -224,9 +215,64 @@ go test ./... && go build ./...
 - Go homepage: https://go.dev/
 - Go downloads: https://go.dev/dl/
 - Go documentation: https://go.dev/doc/
-- CloudNS homepage: https://www.cloudns.net/
-- CloudNS API documentation: https://www.cloudns.net/wiki/
+- ClouDNS homepage: https://www.cloudns.net/
+- ClouDNS API documentation: https://www.cloudns.net/wiki/
 - Project repository: https://github.com/ivan100-ivoop/cloudns-socket
+
+## Deploy with systemd on Linux
+
+The repository includes `deploy/systemd/cloudns-socket.service`. It starts the gateway with the configuration directory `/etc/cloudns-socket` and sends service output to the systemd journal.
+
+Build and install the binary, configuration, and service unit:
+
+```bash
+go build -o ./dist/cloudns-socket-linux-amd64 ./cmd/cloudns-socket
+
+sudo groupadd --system cloudns-socket
+sudo useradd --system --gid cloudns-socket --home-dir /var/lib/cloudns-socket --shell /usr/sbin/nologin cloudns-socket
+
+sudo install -Dm755 ./dist/cloudns-socket-linux-amd64 /usr/local/bin/cloudns-socket
+sudo install -d -o root -g cloudns-socket -m 0750 /etc/cloudns-socket/providers
+sudo install -o root -g cloudns-socket -m 0640 config/gateway.yml /etc/cloudns-socket/gateway.yml
+sudo install -o root -g cloudns-socket -m 0640 config/providers/*.yml /etc/cloudns-socket/providers/
+sudo install -Dm644 deploy/systemd/cloudns-socket.service /etc/systemd/system/cloudns-socket.service
+```
+
+Replace the placeholder ClouDNS credentials in `/etc/cloudns-socket/providers/cloudns.yml`, then start and inspect the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now cloudns-socket.service
+sudo systemctl status cloudns-socket.service
+sudo journalctl -u cloudns-socket.service -f
+```
+
+The gateway listens on the configured TCP port, normally `43`. After changing configuration, restart it with `sudo systemctl restart cloudns-socket.service`.
+
+## Run as a Windows service
+
+The repository includes `deploy/windows/cloudns-socket-service.xml` for [WinSW](https://github.com/winsw/winsw). Rename the WinSW executable to `cloudns-socket-service.exe` and place it beside the XML file in `C:\Program Files\cloudns-socket\`. Keep the Go application binary as `cloudns-socket.exe` in the same directory.
+
+Copy the configuration to `C:\ProgramData\cloudns-socket\`, keeping this layout:
+
+```text
+C:\ProgramData\cloudns-socket\gateway.yml
+C:\ProgramData\cloudns-socket\providers\cloudns.yml
+```
+
+Replace the placeholder ClouDNS credentials, review `allowed_ips`, and install the service from an elevated PowerShell:
+
+```powershell
+cd 'C:\Program Files\cloudns-socket'
+\.\cloudns-socket-service.exe install
+\.\cloudns-socket-service.exe start
+```
+
+To check service output, inspect the WinSW log files in the configured log directory or run the Go binary directly first:
+
+```powershell
+& 'C:\Program Files\cloudns-socket\cloudns-socket.exe' -p 'C:\ProgramData\cloudns-socket'
+```
 
 ## License
 

@@ -1,0 +1,24 @@
+[Unit]
+Description=ClouDNS Socket Gateway
+Documentation=https://github.com/ivan100-ivoop/cloudns-socket
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=cloudns-socket
+Group=cloudns-socket
+WorkingDirectory=/etc/cloudns-socket
+UMask=0027
+ExecStart=/usr/local/bin/cloudns-socket -p /etc/cloudns-socket
+Restart=on-failure
+RestartSec=10s
+TimeoutStopSec=30s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadOnlyPaths=/etc/cloudns-socket
+
+[Install]
+WantedBy=multi-user.target

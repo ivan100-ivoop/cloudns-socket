@@ -1,0 +1,19 @@
+<service>
+  <id>cloudns-socket</id>
+  <name>cloudns-socket</name>
+  <description>ClouDNS Socket Gateway.</description>
+  <executable>%BASE%\cloudns-socket.exe</executable>
+  <arguments>-p "C:\ProgramData\cloudns-socket"</arguments>
+  <workingdirectory>C:\ProgramData\cloudns-socket</workingdirectory>
+  <serviceaccount>
+    <username>NT AUTHORITY\NetworkService</username>
+  </serviceaccount>
+  <startmode>Automatic</startmode>
+  <delayedAutoStart>true</delayedAutoStart>
+  <hidewindow>true</hidewindow>
+  <stoptimeout>30 sec</stoptimeout>
+  <onfailure action="restart" delay="10 sec" />
+  <resetfailure>1 hour</resetfailure>
+  <logpath>C:\ProgramData\cloudns-socket\logs</logpath>
+  <log mode="roll" />
+</service>

@@ -94,8 +94,8 @@ func runServer(configDir string, cfg gateway.Config, registry *provider.Registry
 
 func usage() {
 	fmt.Fprintln(os.Stderr, "Usage:")
-	fmt.Fprintln(os.Stderr, "  domain-gateway -p <config-path>")
-	fmt.Fprintln(os.Stderr, "  domain-gateway -p <config-path> check <domain>")
+	fmt.Fprintln(os.Stderr, "  cloudns-socket -p <config-path>")
+	fmt.Fprintln(os.Stderr, "  cloudns-socket -p <config-path> check <domain>")
 	os.Exit(2)
 }
 
