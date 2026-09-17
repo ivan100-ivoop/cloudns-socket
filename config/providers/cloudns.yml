@@ -1,0 +1,45 @@
+id: cloudns
+
+extensions:
+  - .info
+
+request:
+  method: POST
+  endpoint: "https://api.cloudns.net/domains/check-available.json"
+  timeout: 10s
+  headers:
+    Content-Type: "application/x-www-form-urlencoded"
+    Accept: "application/json"
+    User-Agent: domain-gateway/1.0
+  form:
+    auth-id: "{{auth_id}}"
+    auth-password: "{{auth_password}}"
+    name: "{{domain_name}}"
+    tld[]: "{{tld}}"
+
+variables:
+  # Fill with your own CloudNS credentials before running the service.
+  auth_id: "REPLACE_WITH_CLOUDNS_AUTH_ID"
+  auth_password: "REPLACE_WITH_CLOUDNS_PASSWORD"
+
+response:
+  type: json
+  error:
+    body_contains:
+      - '"status":"Failed"'
+  available:
+    json_value:
+      path: "{{domain}}.status"
+      equals: 1
+  not_available:
+    json_value:
+      path: "{{domain}}.status"
+      equals: 0
+
+socket:
+  available: "CLOUDNS_AVAILABLE"
+  not_available: "CLOUDNS_NOT_AVAILABLE"
+  error: "CLOUDNS_ERROR"
+
+debug: false
+debugLogPath: provider-data.log

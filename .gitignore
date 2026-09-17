@@ -1,0 +1,25 @@
+# Binaries
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go build outputs
+*.test
+coverage.out
+
+# Editor / OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+provider-data.log
+
+# Secrets / local config overrides
+.env
+.env.*
+config/*.local.yml
+config/providers/*.local.yml

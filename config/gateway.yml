@@ -1,0 +1,19 @@
+server:
+  host: "0.0.0.0"
+  port: 43
+  read_timeout: 10s
+  write_timeout: 10s
+  idle_timeout: 15s
+  max_request_size: 512
+  error_response: "DOMAIN_GATEWAY_ERROR"
+  allowed_ips:
+    # put your trusted source IPs here; examples:
+    # - "127.0.0.1"
+    # - "203.0.113.10"
+    # - "192.168.1.0/24"
+    - "127.0.0.1"
+
+providers_path: "providers"
+
+logging:
+  level: "info"
