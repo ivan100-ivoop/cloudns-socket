@@ -18,7 +18,7 @@ request:
     tld[]: "{{tld}}"
 
 variables:
-  # Fill with your own CloudNS credentials before running the service.
+  # Fill with your own ClouDNS credentials before running the service.
   auth_id: "REPLACE_WITH_CLOUDNS_AUTH_ID"
   auth_password: "REPLACE_WITH_CLOUDNS_PASSWORD"
 
