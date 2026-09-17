@@ -22,7 +22,7 @@ A small Go service that listens on a TCP socket, accepts a domain name, resolves
 
 ## Structure
 
-- `cmd/domain-gateway` — CLI entrypoint
+- `cmd/cloudns-socket` — CLI entrypoint
 - `gateway/` — TCP server, config validation, request handling
 - `provider/` — provider registry, template rendering, HTTP logic, matching rules
 - `config/` — runtime config and provider definitions
@@ -86,13 +86,13 @@ variables:
 Start the gateway:
 
 ```bash
-go run ./cmd/domain-gateway -p ./config
+go run ./cmd/cloudns-socket -p ./config
 ```
 
 Run a one-off availability check:
 
 ```bash
-go run ./cmd/domain-gateway -p ./config check example.info
+go run ./cmd/cloudns-socket -p ./config check example.info
 ```
 
 The service expects a raw domain line, for example:
@@ -118,7 +118,7 @@ go build ./...
 Single binary build for the current machine:
 
 ```bash
-go build -o bin/domain-gateway ./cmd/domain-gateway
+go build -o bin/cloudns-socket ./cmd/cloudns-socket
 ```
 
 ## Cross-compile
@@ -126,31 +126,31 @@ go build -o bin/domain-gateway ./cmd/domain-gateway
 Cross-compile for Linux AMD64:
 
 ```bash
-GOOS=linux GOARCH=amd64 go build -o bin/domain-gateway-linux-amd64 ./cmd/domain-gateway
+GOOS=linux GOARCH=amd64 go build -o bin/cloudns-socket-linux-amd64 ./cmd/cloudns-socket
 ```
 
 Cross-compile for Linux ARM64:
 
 ```bash
-GOOS=linux GOARCH=arm64 go build -o bin/domain-gateway-linux-arm64 ./cmd/domain-gateway
+GOOS=linux GOARCH=arm64 go build -o bin/cloudns-socket-linux-arm64 ./cmd/cloudns-socket
 ```
 
 Cross-compile for macOS AMD64:
 
 ```bash
-GOOS=darwin GOARCH=amd64 go build -o bin/domain-gateway-darwin-amd64 ./cmd/domain-gateway
+GOOS=darwin GOARCH=amd64 go build -o bin/cloudns-socket-darwin-amd64 ./cmd/cloudns-socket
 ```
 
 Cross-compile for macOS ARM64:
 
 ```bash
-GOOS=darwin GOARCH=arm64 go build -o bin/domain-gateway-darwin-arm64 ./cmd/domain-gateway
+GOOS=darwin GOARCH=arm64 go build -o bin/cloudns-socket-darwin-arm64 ./cmd/cloudns-socket
 ```
 
 Cross-compile for Windows AMD64:
 
 ```bash
-GOOS=windows GOARCH=amd64 go build -o bin/domain-gateway-windows-amd64.exe ./cmd/domain-gateway
+GOOS=windows GOARCH=amd64 go build -o bin/cloudns-socket-windows-amd64.exe ./cmd/cloudns-socket
 ```
 
 If you need a fully reproducible release pipeline, keep the same command in CI and upload the generated binaries from `bin/`.
