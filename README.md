@@ -1,4 +1,4 @@
-# CloudNS Socket Gateway
+# ClouDNS Socket Gateway
 
 A small Go service that listens on a TCP socket, accepts a domain name, resolves the correct provider by TLD, checks availability via the provider API, and returns a normalized status string.
 
