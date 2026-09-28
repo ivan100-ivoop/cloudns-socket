@@ -164,6 +164,10 @@ func newLoadedProvider(definition YAMLProvider) (*LoadedProvider, error) {
 		if extension == "" {
 			return nil, fmt.Errorf("provider %q has an empty extension", definition.ID)
 		}
+		if extension == "*" {
+			extensions = append(extensions, extension)
+			continue
+		}
 		if !strings.HasPrefix(extension, ".") {
 			extension = "." + extension
 		}
@@ -254,7 +258,12 @@ func (r *Registry) Check(ctx context.Context, domain string) (CheckResult, error
 	}
 	parts.Name = strings.TrimSuffix(parts.Domain, key)
 	parts.Name = strings.TrimSuffix(parts.Name, ".")
-	parts.Extension = strings.TrimPrefix(key, ".")
+	if key == "*" {
+		// A wildcard provider handles the final label as the domain extension.
+		parts.Name = strings.TrimSuffix(parts.Domain, "."+parts.Extension)
+	} else {
+		parts.Extension = strings.TrimPrefix(key, ".")
+	}
 	result, err := loaded.Client.CheckParts(ctx, parts)
 	if err != nil {
 		return CheckResult{ProviderID: loaded.ID, Domain: parts.Domain, Result: ResultError, SocketResponse: loaded.Socket.Error}, err
@@ -274,9 +283,18 @@ func (r *Registry) providerForDomain(domain string) (string, *LoadedProvider) {
 	var selected string
 	var loaded *LoadedProvider
 	for extension, candidate := range r.providers {
+		if extension == "*" {
+			continue
+		}
 		if strings.HasSuffix(domain, extension) && len(extension) > len(selected) {
 			selected = extension
 			loaded = candidate
+		}
+	}
+	if loaded == nil {
+		loaded = r.providers["*"]
+		if loaded != nil {
+			selected = "*"
 		}
 	}
 	return selected, loaded

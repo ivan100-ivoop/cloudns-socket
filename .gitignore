@@ -23,3 +23,4 @@ provider-data.log
 .env.*
 config/*.local.yml
 config/providers/*.local.yml
+cloudns-socket-linux-amd64
